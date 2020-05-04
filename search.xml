@@ -3,6 +3,117 @@
   
     
     <entry>
+      <title><![CDATA[指针浅谈]]></title>
+      <url>/2020/05/04/%E6%8C%87%E9%92%88%E6%B5%85%E8%B0%88/</url>
+      <content type="html"><![CDATA[<p><img src="/images/Pointer/Pointer_Background.jpg" alt="post-cover"></p>
+<p>此篇博客是由日常阅读、总结的文章，旨在通过通俗易懂的文字理解C/C++中的指针。</p>
+<h2 id="一、什么是指针？"><a href="#一、什么是指针？" class="headerlink" title="一、什么是指针？"></a>一、什么是指针？</h2><!-- &nbsp;表示一个空格 -->
+<p>首先，提一句我看到过的让我理解指针最形象的比喻：<strong>变量和指向该变量的指针是同一个硬币的两面</strong>。我们从以下代码片段进行阐述：</p>
+<pre><code>int value = 5;//①
+int* pointer = &amp;value;//②
+cout &lt;&lt; pointer &lt;&lt; endl;//③
+cout &lt;&lt; *pointer &lt;&lt; endl;//④
+</code></pre><blockquote>
+<ul>
+<li>①表示变量value的值是5，数据类型int，int类型占用存储空间一般是4个字节，因为计算机世界里只有0和1，所以变量value在<code>大端模式</code>的计算机世界里是长这个样子的:00000000 00000000 00000000 00000101,其中8个bit表示1个byte。不同的数据类型，其存储空间大小不一样，可以理解为不同大小的鞋子应该放在不同大小的鞋盒里面。value存储在计算机某块内存中，内存地址对程序员不直接可见，这里假设我们使用的机器是32位的，并假设变量value的内存地址的值的16进制表示为0x12345678</li>
+<li>②表示指针变量pointer指向变量value的地址，可以把这一行中的＆符号理解为”取地址操作”，只有取地址操作后，等于号”=”右边的值才是指针类型，类型相同才能赋值这是基础语法。</li>
+<li>③是C++语法的输出语句，效果同C中println，其输出值为0x12345678，说明指针变量的值就是它所指向的变量value的内存地址的值，pointer既然也称之为变量，那就一定也要占据存储空间，指针的大小由<code>内存寻址空间</code>决定（即x86还是x64），刚才说pointer的值是0x12345678，所以它在大端模式计算机里长这样:00010010 00110100 01010110 01111000</li>
+<li>④也是输出语句，输出值为5，表示指针变量pointer所指向的那个地址的实际存储的内容是整数5，这里*符号理解为”解引用操作”，意思就是把pointer指针指向的地址的值取出来。</li>
+</ul>
+</blockquote>
+<p>所以，实际上，指针变量pointer的值是变量value的地址，变量value的值既可以用指向它自己的指针通过”解引用操作”表示，又能用该变量自己表示。</p>
+<p><em>那为什么需要指针这个概念呢？</em></p>
+<p>我个人的理解是便于操作，减少变量，因为指针也可以加1减1这样操作的，比如说上面提到的指针pointer+1，结果将是0x1234567C，因为pointer存储空间是4个字节，它加1相当于把它指向的地址往后移动4个字节(16进制的8加上4等于C，不需要进位，所以前面的7不变)，假如我有一万个在存储空间中相邻排布的相同类型的变量，我可以用一个该类型的指针变量表示这一万个值，因为我移动该指针的地址就行了，然后”解引用操作”取出该地址存储的值。你可能会说我也可以用a表示所有啊，a=3，用完之后a=4，并非如此，你说的这个a在它的作用域内的地址是固定的，从3改为4是指把a实际存储的值变化了，用指针当然也可以改变其中实际的值，不过更多的是通过一个指针变量取出存储在不同地址的值。另外值得一提到是，上面说的指针变量pointer，刚才只说了它的值是value的地址，那它肯定也有自己的地址啊，没错，它肯定也有地址，它的地址将会是某个二级指针的值，也就是**这个玩意儿了。</p>
+<hr>
+<p><strong>脚下留心：</strong></p>
+<p><strong>1.大端模式与小端模式</strong></p>
+<p>大小端的问题是由CPU决定的，它表示的是对内存中排布的数据的不同解析方式。</p>
+<p>假设一个占4个byte的int类型变量的值固定是0x12345678（其中我们称12在高字节位，78在低字节位）。如果该变量在内存空间中如下排布（其中我们称0x100在低地址位，0x103在高地址位），则表示高字节位的12排布在低地址0x100上，说明此款CPU是以大端方式进行解析的。</p>
+<table>
+<thead>
+<tr>
+<th>数据存储地址</th>
+<th style="text-align:center">…</th>
+<th style="text-align:center">0x100</th>
+<th style="text-align:center">0x101</th>
+<th style="text-align:center">0x102</th>
+<th style="text-align:center">0x103</th>
+<th>…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>数据存储值</strong></td>
+<td style="text-align:center"><strong>…</strong></td>
+<td style="text-align:center"><strong>12</strong></td>
+<td style="text-align:center"><strong>34</strong></td>
+<td style="text-align:center"><strong>56</strong></td>
+<td style="text-align:center"><strong>78</strong></td>
+<td><strong>…</strong></td>
+</tr>
+</tbody>
+</table>
+<p>如果该变量在内存空间中如下排布，则表示高字节位的12排布在高地址0x103上，说明此款CPU是以小端方式进行解析的。</p>
+<table>
+<thead>
+<tr>
+<th>数据存储地址</th>
+<th style="text-align:center">…</th>
+<th style="text-align:center">0x100</th>
+<th style="text-align:center">0x101</th>
+<th style="text-align:center">0x102</th>
+<th style="text-align:center">0x103</th>
+<th>…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>数据存储值</strong></td>
+<td style="text-align:center"><strong>…</strong></td>
+<td style="text-align:center"><strong>78</strong></td>
+<td style="text-align:center"><strong>56</strong></td>
+<td style="text-align:center"><strong>34</strong></td>
+<td style="text-align:center"><strong>12</strong></td>
+<td><strong>…</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>2.内存寻址空间</strong></p>
+<p>我们都听说过x86操作系统和x64操作系统的概念，其实就是说32位和64位操作系统，但与之对应的应该是硬件处理器CPU，操作系统本质上还是一款软件，它的绝对性能取决于底层硬件设备。什么是内存寻址空间？我们知道32位的CPU连接32根地址线，那么它总共可以表示2^32^个内存地址，每个内存地址指向内存中的一个byte，所以总共2^32^bytes=4G，即32位的电脑最多可利用的内存空间是4G，亦即32位的电脑只需配4G的内存条就够了，多了也是浪费，根本利用不上。</p>
+<hr>
+<h2 id="二、指针与数组"><a href="#二、指针与数组" class="headerlink" title="二、指针与数组"></a>二、指针与数组</h2><p>惯例，先上代码段：</p>
+<pre><code>int arrayA[3] = {6, 7, 8};//①
+int* p_arrayA = arrayA;//②
+</code></pre><blockquote>
+<ul>
+<li>①是初始化一个长度为3的int型数组<code>arrayA</code></li>
+<li>②是将一个int类型指针<code>p_arrayA</code>指向该数组</li>
+</ul>
+</blockquote>
+<p>这两行代码不报错说明什么呢？说明数组名其实可以当做指针，该指针指向本数组中首个元素，即6所在的地址，而指针<code>p_arrayA</code>也指向数组的首个元素的地址。</p>
+<p><em>它俩有什么区别？</em></p>
+<blockquote>
+<ul>
+<li>指针的值可修改，而数组名是常量。这里提到常量，常量指不可更改的值，比如说出生日期。常量相对而言的是变量，比如说年龄。刚才提到的<code>p_arrayA</code>是变量，<code>arrayA</code>是常量对应代码的表现就是:<br><code>p_arrayA = p_arrayA + 1； // 合理</code><br><code>arrayA = arrayA + 1；// 报错</code><br>虽然不能显式的给<code>arrayA</code>重新赋值，但是用它来取值是可以的，比如说<code>arrayA[1]</code>和<code>*(arrayA+1)</code>都是数组<code>arrayA</code>的第二个变量的值，即7。</li>
+<li>对数组名应用sizeof运算符得到的是该数组的占用内存空间的大小(单位是byte)，对指针应用sizeof运算符得到的是该类型的指针变量的大小。<br><em>为什么说sizeof是运算符？</em><br>因为sizeof返回的单位是byte，即变量实际占用的内存大小，而<code>size（）</code>或者<code>length（）</code>这样的函数返回值一般是数组的长度，即数组成员是多少个。</li>
+</ul>
+</blockquote>
+<p>综上，数组名<code>arrayA</code>可以当做指针用，所以以后看到<code>*(arrayA++)</code>这样的代码不要奇怪。最后，我曾经自己写例子得到指向<code>&amp;arrayA</code>的指针是一个<code>int(*)[3]</code>类型的，<code>int(*)[3]</code>可以理解为长度为3的int类型数组的指针。</p>
+<hr>
+<h2 id="三、new和delete，申请、释放内存空间"><a href="#三、new和delete，申请、释放内存空间" class="headerlink" title="三、new和delete，申请、释放内存空间"></a>三、new和delete，申请、释放内存空间</h2>]]></content>
+      
+        
+        <tags>
+            
+            <tag> 分享 </tag>
+            
+            <tag> 个人小结 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Internet Protocol(1)]]></title>
       <url>/2017/08/12/%E4%BA%92%E8%81%94%E7%BD%91%E5%8D%8F%E8%AE%AE(%E4%BB%8E%E7%B3%BB%E7%BB%9F%E8%A7%92%E5%BA%A6%E8%A7%A3%E8%AF%BB)/</url>
       <content type="html"><![CDATA[<p>  <img src="/images/InternetProtocol/Background.jpg" alt="post-cover"><br>参考链接：<a href="http://www.ruanyifeng.com/blog/2012/05/internet_protocol_suite_part_i.html" target="_blank" rel="external">阮一峰前辈的学习博客</a></p>
