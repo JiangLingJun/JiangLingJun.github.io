@@ -652,7 +652,24 @@ int* p_arrayA = arrayA;//②
 </blockquote>
 <p>综上，数组名<code>arrayA</code>可以当做指针用，所以以后看到<code>*(arrayA++)</code>这样的代码不要奇怪。最后，我曾经自己写例子得到指向<code>&amp;arrayA</code>的指针是一个<code>int(*)[3]</code>类型的，<code>int(*)[3]</code>可以理解为长度为3的int类型数组的指针。</p>
 <hr>
-<h2 id="三、new和delete，申请、释放内存空间"><a href="#三、new和delete，申请、释放内存空间" class="headerlink" title="三、new和delete，申请、释放内存空间"></a>三、new和delete，申请、释放内存空间</h2>]]></content>
+<h2 id="三、new和delete，申请、释放内存空间"><a href="#三、new和delete，申请、释放内存空间" class="headerlink" title="三、new和delete，申请、释放内存空间"></a>三、new和delete，申请、释放内存空间</h2><p>C++中使用new和delete关键字对内存进行分配和回收，C中使用malloc和free。</p>
+<p><strong><em>1.使用new申请的内存空间为什么需要用delete释放？</em></strong></p>
+<p>举个例子：</p>
+<p>你租用了政府一块地（new），并在上面盖了个房子（初始化），并在里面住了一段时间，做了一些事情（使用）。当你使用期限到了， 你应该把地归还政府（delete），公有制不是你想造作就能造作的，人人都申请不归还，白嫖？难不成你想被请去喝茶（计算机资源有限）。</p>
+<p><strong><em>2.被delete了的内存空间为什么不要再使用？</em></strong></p>
+<p>接上一个例子：</p>
+<p>你把地归还给政府后，政府这时只是登记一下，某块地现在已经空闲了，它并不会去清楚那块地上的房子，但政府随时可能把地提供给其他大老板，虽然房子可能暂时还没拆，但如果你继续住在里面的话（访问已释放的内存），你随时都可能在梦中被推土机碾成肉酱。</p>
+<p><strong><em>3.delete一定要作用于被new的那个变量吗？</em></strong></p>
+<p>不是，delete只要作用于被new的地址就行了。<br>比如以下代码段：</p>
+<pre><code>int* ps = new int；// allocate memory
+int* pq = ps;// set second pointer to same block
+delete pq;// delete with second pointer
+ps = NULL;
+pq = NULL;
+</code></pre><p>以上代码仍然可以释放被new申请的内存空间，而不一定非要<code>delete ps;</code>。</p>
+<p><strong><em>4.接上一个代码段，为什么要将指针变量显示置为NULL？</em></strong></p>
+<p>delete一个指针后，编译器只会释放该指针指向的内存空间，而不会删除这个指针本身，且指针重新指向一个未知地址，置为NULL之后再次使用该指针编译器将报错，可以避免后续代码无意使用该指针造成的难以预料的问题，即避免问题2中提到的“被碾成肉酱”。</p>
+]]></content>
       
         
         <tags>
