@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="full-height">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>VPN | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="此篇文章共享自己搭建VPS生成的VPN账号,有心人可以尝试配置并看看墙外的世界。 tips:①.流量有限，温柔点，别乱来；②.IP若被封随时更改，有梯子需求的朋友可私信我获取。  一、准备工作  首先，联网并装了百度网盘的电脑 第二，好像没了…   二、安装必要工具VPN软件PC版–解压缩运行即可提取码:as94 VPN软件Android版–解压缩发送到安卓手机安装提取码:nyxm 三、配置信息">
+<meta name="keywords" content="天梯">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VPN">
+<meta property="og:url" content="http://yoursite.com/2020/05/23/VPN/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="此篇文章共享自己搭建VPS生成的VPN账号,有心人可以尝试配置并看看墙外的世界。 tips:①.流量有限，温柔点，别乱来；②.IP若被封随时更改，有梯子需求的朋友可私信我获取。  一、准备工作  首先，联网并装了百度网盘的电脑 第二，好像没了…   二、安装必要工具VPN软件PC版–解压缩运行即可提取码:as94 VPN软件Android版–解压缩发送到安卓手机安装提取码:nyxm 三、配置信息">
+<meta property="og:image" content="http://yoursite.com/images/VPS/VPN.jpg">
+<meta property="og:image" content="http://yoursite.com/images/VPS/123.png">
+<meta property="og:image" content="http://yoursite.com/images/VPS/1234.png">
+<meta property="og:updated_time" content="2020-05-23T03:46:59.981Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VPN">
+<meta name="twitter:description" content="此篇文章共享自己搭建VPS生成的VPN账号,有心人可以尝试配置并看看墙外的世界。 tips:①.流量有限，温柔点，别乱来；②.IP若被封随时更改，有梯子需求的朋友可私信我获取。  一、准备工作  首先，联网并装了百度网盘的电脑 第二，好像没了…   二、安装必要工具VPN软件PC版–解压缩运行即可提取码:as94 VPN软件Android版–解压缩发送到安卓手机安装提取码:nyxm 三、配置信息">
+<meta name="twitter:image" content="http://yoursite.com/images/VPS/VPN.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+  <header id="navbar" class="overflow-hidden">
+  <div class="container">
+    <nav class="nav">
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">JiangLingJun</span>'s Blog
+            </a>
+         </div>
+        <div class="nav-center is-hidden position-relative" id="search_container">
+            <div class="nav-item full-width full-height">
+                <i class="fa fa-search has-padding" aria-hidden="true"></i>
+                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
+                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            <div id="search_result"></div>
+        </div>
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item" href="/about">
+                About
+            </a>
+            
+        </div>
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                About
+            </a>
+            
+        </div>
+    </nav>
+  </div>
+</header>
+
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 370px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: lightsteelblue;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,.8);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+<section>
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 70px; overflow: auto;">
+            <h1 class="has-text-centered" style="padding-bottom: 10px; border-bottom: 3px solid #fff">
+                <strong>VPN</strong>
+            </h1>
+            
+            <div class="is-flex align-center">
+                <img class="post-avatar" src="/images/Avatar.jpg">
+                <span style="padding:0 10px;"> <span class="sub-title">By</span> JiangLingJun</span>
+                <span class="post-date sub-title">at: 2020-05-23</span>
+            </div>
+            
+                <div>
+                    
+                         <a class="tag is-post-tag" href="/tags/天梯/">天梯</a>
+                    
+                </div>
+            
+        </div>
+        <div class="content" style="overflow: auto">
+            <p><img src="/images/VPS/VPN.jpg" alt="post-cover"></p>
+<p>此篇文章共享自己搭建VPS生成的VPN账号,有心人可以尝试配置并看看墙外的世界。</p>
+<p>tips:<br>①.流量有限，温柔点，别乱来；<br>②.IP若被封随时更改，有梯子需求的朋友可私信我获取。</p>
+<hr>
+<h2 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h2><blockquote>
+<ul>
+<li>首先，联网并装了百度网盘的电脑</li>
+<li>第二，好像没了…</li>
+</ul>
+</blockquote>
+<h2 id="二、安装必要工具"><a href="#二、安装必要工具" class="headerlink" title="二、安装必要工具"></a>二、安装必要工具</h2><p>VPN软件PC版–<a href="https://pan.baidu.com/s/1X4u9Z7hJMLSUDgk8DrehDA" target="_blank" rel="external">解压缩运行即可</a><br>提取码:<code>as94</code></p>
+<p>VPN软件Android版–<a href="https://pan.baidu.com/s/1N3th30ilZ0D-DjX8Zhvfnw" target="_blank" rel="external">解压缩发送到安卓手机安装</a><br>提取码:<code>nyxm</code></p>
+<h2 id="三、配置信息"><a href="#三、配置信息" class="headerlink" title="三、配置信息"></a>三、配置信息</h2><p>①.运行PC版VPN软件后，看以下截图进行配置，点击“确认”：</p>
+<p><img src="/images/VPS/123.png" style="width: 600px;"></p>
+<p>②.代理模式也配置一下：</p>
+<p><img src="/images/VPS/1234.png" style="width: 300px;"></p>
+<p>③.配置就绪后点击链接–<a href="https://www.google.com/" target="_blank" rel="external">Google</a>。以后每次启动纸飞机就能访问外网了。</p>
+<p>④.安卓手机安装好VPN软件后配置服务器地址、服务器端口、密码和加密方式就可以，这些信息上面截图都有。</p>
+<p>⑤.有任何疑问请私信。</p>
+<p>上面这些仅仅是客户端的配置，服务器那边也都是自己网上搜罗教程租用VPS来搭的，之前写过搭梯子博客教程但是被封，毕竟多多少少政治敏感，墙外的负面消息多，真假难辨。</p>
+<hr>
+<p><strong><em>最后</em></strong></p>
+<p>技术无罪，共享精神无罪，但是，别干坏事，做个好人。</p>
+<p><strong>当你凝视深渊时，深渊也在凝视你</strong></p>
+
+        </div>
+        <div class="post-reply">
+            
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk1My82NTE4">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+            
+            
+        </div>
+    </div>
+</section>
+<script>
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+      </div>
+  </div>
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Theme by <a href="https://haojen.github.io/">HaoJen</a>
+        <br>
+        Copyright © LingJun Jiang 2020
+        <br>
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
