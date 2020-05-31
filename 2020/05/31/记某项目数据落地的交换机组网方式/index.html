@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html class="full-height">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>记某项目数据落地的交换机组网方式 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="此篇博客记录某国际项目中数据落地的交换机组网以及配置方式。目录一览：   数据落地方案 Westermo交换机配置概要 to be defined    一、数据落地方案 1.Requirement Analysis① Three Network on the wayside: TVSS network in red, LTE network in blue and WIFI network i">
+<meta name="keywords" content="备忘,网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记某项目数据落地的交换机组网方式">
+<meta property="og:url" content="http://yoursite.com/2020/05/31/记某项目数据落地的交换机组网方式/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="此篇博客记录某国际项目中数据落地的交换机组网以及配置方式。目录一览：   数据落地方案 Westermo交换机配置概要 to be defined    一、数据落地方案 1.Requirement Analysis① Three Network on the wayside: TVSS network in red, LTE network in blue and WIFI network i">
+<meta property="og:image" content="http://yoursite.com/images/Router/AccessInPoint.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/solution.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config1.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config2.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config3.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config4.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config5.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config6.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config7.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config8.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config9.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config10.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config11.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config12.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config13.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config14.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config15.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config16.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config17.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config18.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config19.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config20.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config21.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config22.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config23.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config24.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config25.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config26.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config27.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config28.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config29.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config30.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config31.png">
+<meta property="og:image" content="http://yoursite.com/images/Router/config32.png">
+<meta property="og:updated_time" content="2020-05-31T07:07:36.196Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记某项目数据落地的交换机组网方式">
+<meta name="twitter:description" content="此篇博客记录某国际项目中数据落地的交换机组网以及配置方式。目录一览：   数据落地方案 Westermo交换机配置概要 to be defined    一、数据落地方案 1.Requirement Analysis① Three Network on the wayside: TVSS network in red, LTE network in blue and WIFI network i">
+<meta name="twitter:image" content="http://yoursite.com/images/Router/AccessInPoint.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+  <header id="navbar" class="overflow-hidden">
+  <div class="container">
+    <nav class="nav">
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">JiangLingJun</span>'s Blog
+            </a>
+         </div>
+        <div class="nav-center is-hidden position-relative" id="search_container">
+            <div class="nav-item full-width full-height">
+                <i class="fa fa-search has-padding" aria-hidden="true"></i>
+                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
+                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            <div id="search_result"></div>
+        </div>
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item" href="/about">
+                About
+            </a>
+            
+        </div>
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                About
+            </a>
+            
+        </div>
+    </nav>
+  </div>
+</header>
+
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 370px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: lightsteelblue;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,.8);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+<section>
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 70px; overflow: auto;">
+            <h1 class="has-text-centered" style="padding-bottom: 10px; border-bottom: 3px solid #fff">
+                <strong>记某项目数据落地的交换机组网方式</strong>
+            </h1>
+            
+            <div class="is-flex align-center">
+                <img class="post-avatar" src="/images/Avatar.jpg">
+                <span style="padding:0 10px;"> <span class="sub-title">By</span> JiangLingJun</span>
+                <span class="post-date sub-title">at: 2020-05-31</span>
+            </div>
+            
+                <div>
+                    
+                         <a class="tag is-post-tag" href="/tags/备忘/">备忘</a>
+                    
+                         <a class="tag is-post-tag" href="/tags/网络/">网络</a>
+                    
+                </div>
+            
+        </div>
+        <div class="content" style="overflow: auto">
+            <p><img src="/images/Router/AccessInPoint.png" alt="post-cover"></p>
+<p>此篇博客记录某国际项目中数据落地的交换机组网以及配置方式。<br>目录一览：</p>
+<blockquote>
+<ul>
+<li>数据落地方案</li>
+<li>Westermo交换机配置概要</li>
+<li>to be defined</li>
+</ul>
+</blockquote>
+<hr>
+<h1 id="一、数据落地方案"><a href="#一、数据落地方案" class="headerlink" title="一、数据落地方案"></a>一、数据落地方案</h1><p><img src="/images/Router/solution.png" style="width: 800px;"></p>
+<h2 id="1-Requirement-Analysis"><a href="#1-Requirement-Analysis" class="headerlink" title="1.Requirement Analysis"></a>1.Requirement Analysis</h2><p>① Three Network on the wayside: TVSS network in red, LTE network in blue and WIFI network in yellow;<br>② The data server in OCC implement 3 network interface cards connect to three network.<br>③ There are 5 train to ground channels:</p>
+<blockquote>
+<ul>
+<li>Channel 1：Main line TVSS network，main line active path</li>
+<li>Channel 2：Main line CG1-LTE1 network，main line backup path, Depot backup path</li>
+<li>Channel 3：Main line CG2-LTE2 network，main line backup path, Depot backup path</li>
+<li>Channel 4：Depot WIFI 1 network, depot active path</li>
+<li>Channel 5：Depot WIFI 2 network, depot active path</li>
+</ul>
+</blockquote>
+<p>④ When the train is running on the main line, channel 2 and channel 3 are available when channel 1 fails, and the loading will balanced with each other.<br>⑤ When the train arrive depot, channel 2 and channel 3 are available when channel 4 and channel 5 fail, and the loading will balanced with each other. </p>
+<h2 id="2-Description-of-Solution"><a href="#2-Description-of-Solution" class="headerlink" title="2.Description of Solution"></a>2.Description of Solution</h2><p>On the main line: Automatic channel switching by Router</p>
+<blockquote>
+<ul>
+<li>Install 2 L3 switches in MI carriages, and 4 L2 switches in the rest of carriages, build up a FRNT redundant ring.</li>
+<li>Run VRRP on routers, Router 1 is the master router for first 3 carriages, Router 2 is the backup one. Router 2 is the master router for last 3 carriages, Router 1 is the backup one. Load balance design.</li>
+<li>Channel 1(TVSS network in red) is main path for T2G communication, Channel 2 &amp; 3(CG-LTE1/2 network) is the secondary path. Device have multiple upstream Gateway with different priority. </li>
+<li>end devices sent 3 frames with different destination address to red network,blue network and yellow network at same time, Router will select an available channel. when the red network is available, router will drop the two packets which destination address is not in red network.</li>
+</ul>
+</blockquote>
+<p>In the depot: Automatic channel switching by CG box：</p>
+<blockquote>
+<ul>
+<li>Channel switching between LTE and WiFi is done by CG box</li>
+<li>end devices sent 2 frames with different destination address to yellow network and blue network at same time, CG box will select an available channel. Channel 4/5 (WIFI network) priority are higher than channel 2/3 (LTE network).</li>
+</ul>
+</blockquote>
+<h1 id="二、Westermo交互机配置概要"><a href="#二、Westermo交互机配置概要" class="headerlink" title="二、Westermo交互机配置概要"></a>二、Westermo交互机配置概要</h1><h2 id="1-VLAN配置"><a href="#1-VLAN配置" class="headerlink" title="1.VLAN配置"></a>1.VLAN配置</h2><p>Web界面Configuration -&gt; VLAN -&gt; VLANs可以看到，交换机中存在一个默认 vlan 1；默认 vlan1 是包含所有端口的，即可通过所有端口进入该交换机。</p>
+<p><img src="/images/Router/config1.png" style="width: 600px;"><br><img src="/images/Router/config2.png" style="width: 600px;"><br><img src="/images/Router/config3.png" style="width: 600px;"></p>
+<blockquote>
+<ul>
+<li>VID:VLAN号，定义了VLAN特定身份</li>
+<li>Name：VLAN名称，自动按照从vlan1 依次下推，改名为系统自动分配，web界面不能修改，可用console更改</li>
+<li>Enabled：启动或禁用该 VLAN</li>
+<li>Prio：VLAN 优先级设定，等级：0-7 或者禁用</li>
+<li>IGMP：是否启用，打钩表示启用；不打勾表示未启用</li>
+<li>Interface：规定隶属 VLAN 的端口；Tagged 表示带有标签（一般用于交换机之间<code>级联</code>）。<code>级联</code>举例：两个交换机上分别都有VLAN10和VLAN20，一般来说VLAN10互连、VLAN20互连需要占用2根网线和4个端口，打tag后，只需1根网线和2个端口，交互机根据tag自动区分数据包出口方向。</li>
+</ul>
+</blockquote>
+<p>新建 Vlan 后，在交换机 Interface 会出现该新建的 Vlan。 点击：Configuration -&gt; Network -&gt; Interface，进入 Vlan IP 地址修改和管理。</p>
+<p><img src="/images/Router/config4.png" style="width: 600px;"></p>
+<h2 id="2-IP地址配置"><a href="#2-IP地址配置" class="headerlink" title="2.IP地址配置"></a>2.IP地址配置</h2><p>① 通过Web页面配置<br>Web界面Configuration -&gt; Network -&gt; Interface</p>
+<p><img src="/images/Router/config5.png" style="width: 600px;"></p>
+<p>进入到 IP 修改界面后，开始进行 IP 地址修改,点击Apply完成 IP 修改。</p>
+<p><img src="/images/Router/config6.png" style="width: 600px;"></p>
+<h2 id="3-FRNT配置"><a href="#3-FRNT配置" class="headerlink" title="3.FRNT配置"></a>3.FRNT配置</h2><p>环网结构:</p>
+<p><img src="/images/Router/config7.png" style="width: 450px;"></p>
+<p>每个环网只有一个 Focal Point，阻塞点位于 Focal Point 上。收敛时间<20ms（200台交换机） 环网配置位于="" web="" 配置界面的configuration="" -=""> L2 Redundancy -&gt; FRNT,点击 New新建一个 FRNT</20ms（200台交换机）></p>
+<p><img src="/images/Router/config8.png" style="width: 300px;"></p>
+<blockquote>
+<ul>
+<li>Ring ID： FRNT 环网唯一标识符。目前只有一个 FRNT 环网</li>
+<li>Focal Point：它是环网中代表拓扑结构改变的一个元素。如果你这是一个 Member(成员)，这里就不打勾</li>
+</ul>
+</blockquote>
+<p>注意：一个 FRNT 只有一个 Focal Point，它会响应环网中拓扑结构变化，决定通讯链路及备援链路。其他环网成员就是默认的 Member（社员）。设置 member 时不要在 Focal Point 打勾。<br>Port M/Port N：FRNT需要分配两个端口作为环网端口。他们连接到相邻设备来组成 FRNT环。<br>然后点击 Apply完成配置</p>
+<p><img src="/images/Router/config9.png" style="width: 300px;"></p>
+<h2 id="4-VRRP配置"><a href="#4-VRRP配置" class="headerlink" title="4.VRRP配置"></a>4.VRRP配置</h2><p>VRRP: 多台路由器共享一个虚拟IP(VIP)地址,具有高优先级的路由器充当VIP主机,即Master,而其他路由器处于热备状态,即Backup</p>
+<p><img src="/images/Router/config10.png" style="width: 450px;"></p>
+<p>VRRP Group 同步,即R1两端同为主或备保持同步切换,不需要做链路检测或Track.westermo支持最多两组同步,如下图中VRID33和VRID1</p>
+<p><img src="/images/Router/config11.png" style="width: 300px;"></p>
+<p><strong>VRRP基本配置</strong><br>Web界面Configuration -&gt; Routing -&gt; VRRP,点击New进入VRRP配置</p>
+<p><img src="/images/Router/config12.png" style="width: 450px;"><br><img src="/images/Router/config13.png" style="width: 450px;"></p>
+<h2 id="5-CLI登录交换机"><a href="#5-CLI登录交换机" class="headerlink" title="5.CLI登录交换机"></a>5.CLI登录交换机</h2><p>需要console线或者网线通过putty软件用SSH方式登录</p>
+<p><img src="/images/Router/config14.png" style="width: 450px;"></p>
+<p>用console登陆，请检查Windows“设备管理器”中的“端口（COM和LPT）”获取COM端口信息。如下可以通过COM15进入交换机。</p>
+<p><img src="/images/Router/config15.png" style="width: 450px;"><br><img src="/images/Router/config16.png" style="width: 450px;"></p>
+<p>登陆帐号是admin</p>
+<p><img src="/images/Router/config17.png" style="width: 600px;"></p>
+<h2 id="6-默认网关配置"><a href="#6-默认网关配置" class="headerlink" title="6.默认网关配置"></a>6.默认网关配置</h2><p>为不同的VLAN配置不同的网关和distance,例:</p>
+<p><img src="/images/Router/config18.png" style="width: 600px;"></p>
+<p>通过show命令展示VLAN信息</p>
+<p><img src="/images/Router/config19.png" style="width: 600px;"></p>
+<h2 id="7-组播路由配置"><a href="#7-组播路由配置" class="headerlink" title="7.组播路由配置"></a>7.组播路由配置</h2><p>Web界面Configuration -&gt; Routing -&gt; Common,钩选Multicast启用组播路由，点击Apply完成</p>
+<p><img src="/images/Router/config20.png" style="width: 450px;"></p>
+<p>Static Route设置组播路由</p>
+<p><img src="/images/Router/config21.png" style="width: 450px;"></p>
+<p><strong>配置案例</strong></p>
+<p>参照如下拓扑测试</p>
+<p><img src="/images/Router/config22.png" style="width: 600px;"></p>
+<p>Server 发组播流，Client 跨网段接收</p>
+<p>① 启用组播路由并配置</p>
+<p><img src="/images/Router/config23.png" style="width: 600px;"></p>
+<p>② IGMP Snooping 启动<br>a) IGMP 必须启动，否则client 无法接收到组播流</p>
+<p><img src="/images/Router/config24.png" style="width: 600px;"></p>
+<p>③ IGMP fast leave ports 钩选<br>a)    默认端口Fast leave ports 不启用，Server正常发流，当Client退出组播组时，Client所连端口还会继续接收组播流直至组播监听timeout（default 300 sec）<br>b)    x10 端口Fast leave ports 钩选，Server正常发流，当Client退出组播组时，Client所连端口x10将快速切断组播流接收</p>
+<p><img src="/images/Router/config25.png" style="width: 600px;"></p>
+<p>④ Multicast router ports 启用<br>a)    Multicast router ports 针对所连end device或者Switch不具备IGMP功能。<br>b)    Multicast router ports 不启用，Server正常发流，当Client退出组播组时（如VLC关闭，停止接收视频流），Wireshark将抓不到UDP包。<br>c)    Multicast router ports 启用，Server正常发流，当Client退出组播组时（如VLC关闭，停止接收视频流），Wireshark依然能抓到UDP包。</p>
+<p><strong><em>注意：以上测试设备—viper-212A-T3G，WeOS 4.27.0<br>当启用Multicast router ports功能，点击Apply，配置立即生效。<br>当取消Multicast router ports功能，点击Apply，配置无法立即生效，需将IGMP Snooping重新启用，即Disabled再Enabled。</em></strong></p>
+<p><img src="/images/Router/config26.png" style="width: 600px;"></p>
+<h2 id="8-端口镜像配置"><a href="#8-端口镜像配置" class="headerlink" title="8.端口镜像配置"></a>8.端口镜像配置</h2><p>通过端口镜像，可以对某个端口的流量进行监控</p>
+<p><img src="/images/Router/config27.png" style="width: 600px;"><br><img src="/images/Router/config28.png" style="width: 600px;"></p>
+<p>设置完成后，就可以将PC连接到设置好的端口(这里是X11)，通过Wireshark进行抓包</p>
+<h2 id="9-导出配置"><a href="#9-导出配置" class="headerlink" title="9.导出配置"></a>9.导出配置</h2><p>进入Maintenance -&gt; Backup &amp; restore</p>
+<p><img src="/images/Router/config29.png" style="width: 600px;"></p>
+<h2 id="10-导入配置"><a href="#10-导入配置" class="headerlink" title="10.导入配置"></a>10.导入配置</h2><p>① 进入Maintenance -&gt; Backup &amp; restore -&gt; Restore configuration 点击浏览</p>
+<p><img src="/images/Router/config30.png" style="width: 600px;"></p>
+<p>② 选择配置文件所在的位置</p>
+<p><img src="/images/Router/config31.png" style="width: 600px;"></p>
+<p>③ 点击Restore, 将配置导入即可</p>
+<p><img src="/images/Router/config32.png" style="width: 600px;"></p>
+<h1 id="三、to-be-defined"><a href="#三、to-be-defined" class="headerlink" title="三、to be defined"></a>三、to be defined</h1>
+        </div>
+        <div class="post-reply">
+            
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk1My82NTE4">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+            
+            
+        </div>
+    </div>
+</section>
+<script>
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+      </div>
+  </div>
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Theme by <a href="https://haojen.github.io/">HaoJen</a>
+        <br>
+        Copyright © LingJun Jiang 2020
+        <br>
+        Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
