@@ -63,7 +63,7 @@
 <p><img src="/images/Router/config6.png" style="width: 600px;"></p>
 <h2 id="3-FRNT配置"><a href="#3-FRNT配置" class="headerlink" title="3.FRNT配置"></a>3.FRNT配置</h2><p>环网结构:</p>
 <p><img src="/images/Router/config7.png" style="width: 450px;"></p>
-<p>每个环网只有一个 Focal Point，阻塞点位于 Focal Point 上。收敛时间<20ms（200台交换机） 环网配置位于="" web="" 配置界面的configuration="" -=""> L2 Redundancy -&gt; FRNT,点击 New新建一个 FRNT</20ms（200台交换机）></p>
+<p>每个环网只有一个 Focal Point，阻塞点位于 Focal Point 上。收敛时间&lt;20ms（200台交换机）<br>环网配置位于Web配置界面的Configuration L2Redundancy FRNT,点击 New新建一个 FRNT</p>
 <p><img src="/images/Router/config8.png" style="width: 300px;"></p>
 <blockquote>
 <ul>
@@ -109,6 +109,7 @@
 <h2 id="8-端口镜像配置"><a href="#8-端口镜像配置" class="headerlink" title="8.端口镜像配置"></a>8.端口镜像配置</h2><p>通过端口镜像，可以对某个端口的流量进行监控</p>
 <p><img src="/images/Router/config27.png" style="width: 600px;"><br><img src="/images/Router/config28.png" style="width: 600px;"></p>
 <p>设置完成后，就可以将PC连接到设置好的端口(这里是X11)，通过Wireshark进行抓包</p>
+<p><strong><em>注意:被设置了镜像的端口不能像正常端口一样使用,连接此端口的设备将ping不通其他端口,同Vlan下也ping不通</em></strong></p>
 <h2 id="9-导出配置"><a href="#9-导出配置" class="headerlink" title="9.导出配置"></a>9.导出配置</h2><p>进入Maintenance -&gt; Backup &amp; restore</p>
 <p><img src="/images/Router/config29.png" style="width: 600px;"></p>
 <h2 id="10-导入配置"><a href="#10-导入配置" class="headerlink" title="10.导入配置"></a>10.导入配置</h2><p>① 进入Maintenance -&gt; Backup &amp; restore -&gt; Restore configuration 点击浏览</p>
