@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html class="full-height">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>内存对齐那点事 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="参考链接：内存对齐规则之我见-作者:Levphy 此篇博客主要阐述知识点—内存对齐。目录一览：   为什么要求内存对齐? 内存对齐三大规则 包含共同体类型变量的内存对齐 规则之外的例子   一、为什么要求内存对齐?主要原因如下:   节省内存空间,提升程序性能 考虑兼容性,便于平台移植   二、内存对齐三大规则首先考虑以下实例: #include&amp;lt;iostream&amp;gt; using na">
+<meta name="keywords" content="分享">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存对齐那点事">
+<meta property="og:url" content="http://yoursite.com/2020/07/21/内存对齐那点事/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="参考链接：内存对齐规则之我见-作者:Levphy 此篇博客主要阐述知识点—内存对齐。目录一览：   为什么要求内存对齐? 内存对齐三大规则 包含共同体类型变量的内存对齐 规则之外的例子   一、为什么要求内存对齐?主要原因如下:   节省内存空间,提升程序性能 考虑兼容性,便于平台移植   二、内存对齐三大规则首先考虑以下实例: #include&amp;lt;iostream&amp;gt; using na">
+<meta property="og:image" content="http://yoursite.com/images/Memory-alignment/memory-cover.jpg">
+<meta property="og:updated_time" content="2020-07-21T15:53:07.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="内存对齐那点事">
+<meta name="twitter:description" content="参考链接：内存对齐规则之我见-作者:Levphy 此篇博客主要阐述知识点—内存对齐。目录一览：   为什么要求内存对齐? 内存对齐三大规则 包含共同体类型变量的内存对齐 规则之外的例子   一、为什么要求内存对齐?主要原因如下:   节省内存空间,提升程序性能 考虑兼容性,便于平台移植   二、内存对齐三大规则首先考虑以下实例: #include&amp;lt;iostream&amp;gt; using na">
+<meta name="twitter:image" content="http://yoursite.com/images/Memory-alignment/memory-cover.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+  <header id="navbar" class="overflow-hidden">
+  <div class="container">
+    <nav class="nav">
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">JiangLingJun</span>'s Blog
+            </a>
+         </div>
+        <div class="nav-center is-hidden position-relative" id="search_container">
+            <div class="nav-item full-width full-height">
+                <i class="fa fa-search has-padding" aria-hidden="true"></i>
+                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
+                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            <div id="search_result"></div>
+        </div>
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item" href="/about">
+                About
+            </a>
+            
+        </div>
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                About
+            </a>
+            
+        </div>
+    </nav>
+  </div>
+</header>
+
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 370px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: lightsteelblue;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,.8);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+<section>
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 70px; overflow: auto;">
+            <h1 class="has-text-centered" style="padding-bottom: 10px; border-bottom: 3px solid #fff">
+                <strong>内存对齐那点事</strong>
+            </h1>
+            
+            <div class="is-flex align-center">
+                <img class="post-avatar" src="/images/Avatar.jpg">
+                <span style="padding:0 10px;"> <span class="sub-title">By</span> JiangLingJun</span>
+                <span class="post-date sub-title">at: 2020-07-21</span>
+            </div>
+            
+                <div>
+                    
+                         <a class="tag is-post-tag" href="/tags/分享/">分享</a>
+                    
+                </div>
+            
+        </div>
+        <div class="content" style="overflow: auto">
+            <p><img src="/images/Memory-alignment/memory-cover.jpg" alt="post-cover"></p>
+<p>参考链接：<a href="https://levphy.github.io/2017/03/23/memory-alignment.html" target="_blank" rel="external">内存对齐规则之我见-作者:Levphy</a></p>
+<p>此篇博客主要阐述知识点—内存对齐。<br>目录一览：</p>
+<blockquote>
+<ul>
+<li>为什么要求内存对齐?</li>
+<li>内存对齐三大规则</li>
+<li>包含共同体类型变量的内存对齐</li>
+<li>规则之外的例子</li>
+</ul>
+</blockquote>
+<h2 id="一、为什么要求内存对齐"><a href="#一、为什么要求内存对齐" class="headerlink" title="一、为什么要求内存对齐?"></a>一、为什么要求内存对齐?</h2><p><strong>主要原因如下:</strong></p>
+<blockquote>
+<ul>
+<li>节省内存空间,提升程序性能</li>
+<li>考虑兼容性,便于平台移植</li>
+</ul>
+</blockquote>
+<h2 id="二、内存对齐三大规则"><a href="#二、内存对齐三大规则" class="headerlink" title="二、内存对齐三大规则"></a>二、内存对齐三大规则</h2><p>首先考虑以下实例:</p>
+<pre><code>#include&lt;iostream&gt;
+using namespace std;
+struct A{
+    char a;
+    int b;
+    short c;
+};
+
+struct B{
+    short c;
+    char a;
+    int b;
+};
+int main(){
+    cout&lt;&lt;sizeof(A)&lt;&lt;endl;
+    cout&lt;&lt;sizeof(B)&lt;&lt;endl;
+    return 0;
+}
+</code></pre><p>上面两个结构体A和B成员变量类型相同，但是占用的内存空间大小(单位:字节)却不一样。<br><strong>sizeof(A) = 12</strong><br><strong>sizeof(B) = 8</strong><br>为了分析造成这种现象的原因，我们不得不提及内存对齐的<strong>三大规则</strong>:</p>
+<blockquote>
+<ul>
+<li>对于结构体的各个成员，第一个成员的偏移量是0，排列在后面的成员其当前偏移量必须是当前成员类型的整数倍;</li>
+<li>结构体内所有数据成员各自内存对齐后，结构体本身还要进行一次内存对齐，保证整个结构体占用内存大小是结构体内最大数据成员的最小整数倍;</li>
+<li>如程序中有#pragma pack(n)预编译指令，则所有成员对齐以n字节为准(即偏移量是n的整数倍)，不再考虑当前类型以及最大结构体内类型</li>
+</ul>
+</blockquote>
+<p>以上面结构体A为例，第一个成员a是char类型，占用1个字节空间，偏移量为0，第二个成员b是int类型，占用4个字节空间，按照规则1，b的偏移量必须是int类型的整数倍，所以编译器会在a变量后面插入3字节缓冲区，保证此时b的偏移量(4字节)是b类型的整数倍(当前恰好是1倍)，第3个成员c为short类型，此时c的偏移量正好是4+4=8个字节，已经是short类型的整数倍，故b与c之间不用填充缓冲字节。但这时，结构体A的大小为8+2=10个字节，按照规则2，结构体A大小必须是其最大成员类型int的整数倍，所以在10个字节的基础上再填充2个字节，保证最后结构体大小为12，以符合规则2。</p>
+<table>
+<thead>
+<tr>
+<th>数据成员</th>
+<th style="text-align:center">前面偏移量</th>
+<th>成员自身占用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>(char) a</strong></td>
+<td style="text-align:center"><strong>0</strong></td>
+<td><strong>1</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>缓冲补齐</strong></td>
+<td style="text-align:center"><strong>1</strong></td>
+<td><strong>3（规则1）</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>(int) b</strong></td>
+<td style="text-align:center"><strong>4</strong></td>
+<td><strong>4</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>(short) c</strong></td>
+<td style="text-align:center"><strong>8</strong></td>
+<td><strong>2</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>缓存补齐</strong></td>
+<td style="text-align:center"><strong>10</strong></td>
+<td><strong>2（规则2）</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>类似的，结构体B成员的分析如下：</p>
+<table>
+<thead>
+<tr>
+<th>数据成员</th>
+<th style="text-align:center">前面偏移量</th>
+<th>成员自身占用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>(char) c</strong></td>
+<td style="text-align:center"><strong>0</strong></td>
+<td><strong>2</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>(char) a</strong></td>
+<td style="text-align:center"><strong>2</strong></td>
+<td><strong>1</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>缓存补齐</strong></td>
+<td style="text-align:center"><strong>3</strong></td>
+<td><strong>1(规则1)</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>(int) b</strong></td>
+<td style="text-align:center"><strong>4</strong></td>
+<td><strong>4</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="三、包含共同体类型变量的内存对齐"><a href="#三、包含共同体类型变量的内存对齐" class="headerlink" title="三、包含共同体类型变量的内存对齐"></a>三、包含共同体类型变量的内存对齐</h2><pre><code>struct BU
+{
+    int number;             //4字节
+    union UBffer
+    {
+        char buffer[13];    //填充3字节，该成员占16字节空间
+        int number;
+    }ubuf;
+    int aa;                 //占4字节空间,当前偏移量已补齐为20
+    double dou;             //占8字节空间
+}bu;
+</code></pre><p><code>sizeof(BU) = 4 + 13 + 3(补齐) + 4 + 8 = 32</code>，分析方法类似，在计算aa的偏移量时，我们可以肯定的是一定是int类型的整数倍，由于不作任何缓冲补齐的情况下，<code>number + buffer = 17</code>字节，为了符合规则1，需要填充3个字节。<br>结构体BU稍微变换下aa和dou成员顺序，结果将大不相同:</p>
+<pre><code>struct BC
+{
+    int number;             //4字节
+    union UBffer
+    {
+        char buffer[13];    //填充7字节，该成员占20字节空间
+        int number;
+    }ubuf;
+    double dou;             //占8字节空间，当前偏移量已补齐为24
+    int aa;                 //占4字节空间，当前占用空间36字节，最大double类型，还需要根据规则2补齐
+}bc;
+</code></pre><p>此时<code>sizeof(BC) = 4 + 13 + 7(规则1补齐) + 8 + 4 + 4(规则2补齐) = 40 (8的整数倍)</code></p>
+<p>我们可能对于结构体类包含union类型成员抱有疑虑，再考虑下面实例：</p>
+<pre><code>struct BD
+{
+    short number;
+    union UBffer
+    {
+        char buffer[13];
+        int number;
+    }ubuf;
+}bd;
+</code></pre><p>运行结果是<code>sizeof(BD) = 2 + 2 + 13 +3 = 20</code>，可能你会问，为什么不是<code>2+13+1 = 16</code>，这是因为union类型比较特殊，计算union成员的偏移量时，需要根据union内部最大成员类型来进行缓冲补齐，所以为了保证偏移量为union最大成员int类型的整数倍，需要在number(short类型)后面填充2个字节，前面例子中number是int类型，就没有这个必要了。</p>
+<p>再比如:</p>
+<pre><code>struct BE
+{
+    short number;
+    union UBffer
+    {
+        char buffer[13];
+        double number;
+    }ubuf;
+}be;
+</code></pre><p>它的运行结果是<code>sizeof(BE) = 2 + 6 + 13 + 3 = 24</code>，number后面为了与double类型进行对齐而补齐了6个字节，最后再按照规则2补齐了3个字节</p>
+<p>考虑规则3:<br>举个例子，在<code>#pragma pack(1)</code>时，以1个字节对齐时，属于最简单的情况，结构体大小是所有成员的类型大小的和。所以<code>sizeof(BU) = sizeof(BC) = 29</code>,这时与成员变量顺序不再相关。其他指定的字节对齐也很好分析。一般而言，奇数个字节对齐没有意义，正常情况下，编码人员不关心编译器对内存对齐所作的工作。<br>上面的例子都想明白之后，内存对齐的规则应该了然于胸了。</p>
+<p>PS: C语言中<code>offsetof()</code>函数可用于查看特定的结构体成员在结构体中的偏移量，编程时可以用于验证上面的说法。其实现类似如下:</p>
+<pre><code>#define offsetof(type, member) (size_t)&amp;(((type *)0)-&gt;member)
+</code></pre><p>原理是，强制将结构体(类型为type)的起始地址置为0，然后输出其成员的地址，该地址的大小就是成员在结构体中的偏移量。</p>
+<h2 id="四、规则之外的例子"><a href="#四、规则之外的例子" class="headerlink" title="四、规则之外的例子"></a>四、规则之外的例子</h2><p>C99中定义了柔性数组机制，因此对于一个结构体，如果最后一个成员是数组的话，结构体大小与该成员是否是柔性数组有密切关系。</p>
+<pre><code>struct sds{
+    unsigned int len;
+    unsigned int free;
+    char buf[0];//或char buf[]
+};
+</code></pre><p>当结构体定义中，最后一个成员是数组且数组大小为0或没标记时，该成员数组是柔性数组，不计入结构体大小，因此<code>sizeof(sds) = 8</code><br>而下面的结构体sd的<code>sizeof(sd) = 12</code>，因为最后一个数组成员是普通数组，适用于上述补齐规则。</p>
+<pre><code>struct sds{
+    unsigned int len;
+    unsigned int free;
+    char buf[1];
+};
+</code></pre><p>我们知道，C++为了兼容C，保留了struct关键字，但是实际上C++中的struct是一个默认访问控制权限为public的class。C++标准规定:一个空类的大小为1个字节，因此在C++中，<code>sizeof(空类或空结构体) = 1</code>，在C语言中，<code>sizeof(空结构体) = 0</code>。</p>
+
+        </div>
+        <div class="post-reply">
+            
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk1My82NTE4">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+            
+            
+        </div>
+    </div>
+</section>
+<script>
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+      </div>
+  </div>
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Theme by <a href="https://haojen.github.io/">HaoJen</a>
+        <br>
+        Copyright © LingJun Jiang 2020
+        <br>
+        Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
